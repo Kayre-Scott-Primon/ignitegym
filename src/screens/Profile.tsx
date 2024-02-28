@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Alert } from "react-native";
 import {
   Center,
   ScrollView,
@@ -7,7 +7,10 @@ import {
   Skeleton,
   Text,
   Heading,
+  useToast,
 } from "native-base";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
@@ -17,7 +20,49 @@ import { Button } from "@components/Button";
 const PHOTO_SIZE = 120;
 
 export function Profile() {
-  const [photoIsLoading, setPhotoIsLoading] = useState(true);
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
+  const [userPhoto, setUserPhoto] = useState("");
+  const toast = useToast();
+
+  async function handleUserPhotoSelect() {
+    setPhotoIsLoading(true);
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+        //base64: true,
+      });
+
+      console.log(photoSelected);
+
+      if (photoSelected.canceled) {
+        return;
+      }
+
+      if (photoSelected.assets[0].uri) {
+        const photoInfo = await FileSystem.getInfoAsync(
+          photoSelected.assets[0].uri
+        );
+
+        if (photoInfo.exists && photoInfo.size / 1024 / 1024 > 3) {
+          toast.show({
+            title: "Essa imagem é muito grnade, Escolha uma de até 3MB",
+            placement: "top",
+            bgColor: "red.500",
+          });
+          return;
+        }
+
+        setUserPhoto(photoSelected.assets[0].uri);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPhotoIsLoading(false);
+    }
+  }
 
   return (
     <VStack flex={1}>
@@ -35,11 +80,11 @@ export function Profile() {
           ) : (
             <UserPhoto
               size={PHOTO_SIZE}
-              source={{ uri: "https://github.com/Kayre-Scott-Primon.png" }}
+              source={{ uri: userPhoto }}
               alt="Foto do usuário"
             />
           )}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleUserPhotoSelect}>
             <Text
               color="green.500"
               fontWeight={"bold"}
