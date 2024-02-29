@@ -18,6 +18,7 @@ export function HistoryCard() {
           fontSize={"sm"}
           textTransform={"capitalize"}
           numberOfLines={1}
+          fontFamily={"heading"}
         >
           Exercício 1
         </Heading>

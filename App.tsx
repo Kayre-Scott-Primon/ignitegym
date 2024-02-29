@@ -19,7 +19,7 @@ export default function App() {
     <NativeBaseProvider>
       <StatusBar
         barStyle={"light-content"}
-        backgroundColor={"#202024"}
+        backgroundColor={"transparent"}
         translucent
       />
       {fontLoaded ? <Routes /> : <Loading />}

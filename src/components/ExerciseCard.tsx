@@ -28,7 +28,7 @@ export function ExerciseCard({ ...rest }: Props) {
           resizeMode="cover"
         />
         <VStack flex={1}>
-          <Heading fontSize={"lg"} color="white" numberOfLines={2}>
+          <Heading fontSize={"lg"} color="white" numberOfLines={2} fontFamily={"heading"}>
             Remada Unilateral
           </Heading>
           <Text fontSize={"sm"} color="gray.200" mt={1}>
