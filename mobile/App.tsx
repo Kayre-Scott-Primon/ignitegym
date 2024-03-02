@@ -11,6 +11,7 @@ import { Loading } from "@components/Loading";
 import { SignIn } from "@screens/SignIn";
 import { SignUp } from "@screens/SignUp";
 import { Routes } from "@routes/index";
+import { AuthContextProvider } from "@contexts/AuthContext";
 
 export default function App() {
   const [fontLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
@@ -22,7 +23,9 @@ export default function App() {
         backgroundColor={"transparent"}
         translucent
       />
-      {fontLoaded ? <Routes /> : <Loading />}
+      <AuthContextProvider>
+        {fontLoaded ? <Routes /> : <Loading />}
+      </AuthContextProvider>
     </NativeBaseProvider>
   );
 }
